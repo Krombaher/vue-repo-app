@@ -1,64 +1,26 @@
 <script>
 import Results from "@/components/Results.vue";
-import axios from "axios";
 
 export default {
     data() {
         return {
-            repoData: null,
             searchValue: ''
         }
     },
-    methods: {
-        async getData() {
-            await axios.post(
-                `https://api.github.com/graphql`,
-                {
-                    query: `
-                      {
-                          user(login: "octocat") {
-                            repositories(first: 20) {
-                              edges {
-                                node {
-                                  id
-                                  name
-                                  description
-                                  issues(first: 5) {
-                                    edges {
-                                      node {
-                                        title
-                                        body
-                                        state
-                                        createdAt
-                                      }
-                                    }
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                    `,
-                },
-                {
-                    headers: {Authorization: `Bearer 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`}
-                }
-            ).then(res => {
-                console.log(res.data.data.user.repositories.edges)
-                this.repoData = res.data.data.user.repositories.edges
-            })
+    methods: {},
 
-        }
+    mounted() {
+        this.$store.dispatch('fetchData')
     },
     computed: {
         repoList() {
             if (this.searchValue.trim().length > 0) {
-                return this.repoData.filter((repo) =>
+                return this.$store.state.repoData.filter((repo) =>
                     repo.node.name
                         .toLowerCase()
                         .includes(this.searchValue.trim().toLowerCase()))
             }
-            return this.repoData
+            return this.$store.state.repoData
         }
     },
     components: {
@@ -72,9 +34,8 @@ export default {
             <input
                 type="text"
                 placeholder="Enter text..."
-                v-model="searchValue"
+               v-model="searchValue"
             />
-            <button @click="getData">Show</button>
         </div>
         <div class="table__container">
             <table>
