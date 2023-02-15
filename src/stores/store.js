@@ -30,7 +30,7 @@ export default createStore({
                 query: `
                       {
                           user(login: "octocat") {
-                            repositories(first: 30) {
+                            repositories(first: 100) {
                               edges {
                                 node {
                                   id
@@ -60,10 +60,12 @@ export default createStore({
                         }
                     `,
             }, {
-                headers: {Authorization: `Bearer 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`}
+                headers: {Authorization: `Bearer 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`}
             }).then(res => {
                 // console.log(res.data.data.user.repositories.edges)
                 this.state.data = res.data.data.user.repositories.edges
+            }).catch(res => {
+                console.log(res)
             })
         }
     }

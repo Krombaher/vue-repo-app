@@ -15,6 +15,7 @@
         </div>
         <div class="issue__container">
             <Issues
+                v-if="$store.state.searchValue"
                 :issues="$store.state.active.issues"
                 :visible="$store.state.visible"
                 :onClick="onClick"
