@@ -1,18 +1,11 @@
 <script setup>
- import SearchBar from "@/components/SearchBar.vue";
+import RepositoryList from "@/components/RepositoryList.vue";
 </script>
 
 <template>
-    <main>
-       <SearchBar/>
-    </main>
+   <RepositoryList />
 </template>
 
 <style scoped>
-main {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
+
 </style>

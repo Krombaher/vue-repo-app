@@ -1,10 +1,25 @@
 import {createStore} from 'vuex'
 import axios from "axios";
 
-const store = createStore({
-    state() {
-        return {
-            repoData: null
+export default createStore({
+    state: {
+        data: null,
+        searchValue: '',
+        modal: false,
+        visible: false,
+        active: {},
+        activeId:{},
+    },
+
+    getters: {
+        filteredList(state) {
+            if (state.searchValue.trim().length > 0) {
+                return state.data.filter((repo) =>
+                    repo.node.name
+                        .toLowerCase()
+                        .includes(state.searchValue.trim().toLowerCase()))
+            }
+            return state.data
         }
     },
 
@@ -15,7 +30,7 @@ const store = createStore({
                 query: `
                       {
                           user(login: "octocat") {
-                            repositories(first: 20) {
+                            repositories(first: 30) {
                               edges {
                                 node {
                                   id
@@ -24,10 +39,17 @@ const store = createStore({
                                   issues(first: 5) {
                                     edges {
                                       node {
+                                        id
                                         title
                                         body
                                         state
-                                        createdAt
+                                        comments(first: 5) {
+                                          nodes {
+                                            id
+                                            createdAt
+                                            body
+                                          }
+                                        }
                                       }
                                     }
                                   }
@@ -38,13 +60,11 @@ const store = createStore({
                         }
                     `,
             }, {
-                headers: {Authorization: `Bearer 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`}
+                headers: {Authorization: `Bearer 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`}
             }).then(res => {
-                console.log(res.data.data.user.repositories.edges)
-                store.state.repoData = res.data.data.user.repositories.edges
+                // console.log(res.data.data.user.repositories.edges)
+                this.state.data = res.data.data.user.repositories.edges
             })
         }
     }
 })
-
-export default store
