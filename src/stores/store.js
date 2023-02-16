@@ -1,14 +1,12 @@
 import {createStore} from 'vuex'
 import axios from "axios";
 
-export default createStore({
+export default createStore ({
     state: {
         data: null,
         searchValue: '',
         modal: false,
-        visible: false,
         active: {},
-        activeId:{},
     },
 
     getters: {
@@ -20,6 +18,19 @@ export default createStore({
                         .includes(state.searchValue.trim().toLowerCase()))
             }
             return state.data
+        }
+    },
+
+    mutations: {
+        onClick(state, id) {
+            state.active.id = id
+        },
+
+        setState(state, obj) {
+            state.searchValue = obj.name
+            state.active.name = obj.name
+            state.active.issues = obj.issues.edges
+            state.modal = false
         }
     },
 
@@ -60,9 +71,8 @@ export default createStore({
                         }
                     `,
             }, {
-                headers: {Authorization: `Bearer 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`}
+                headers: {Authorization: `Bearer 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`}
             }).then(res => {
-                // console.log(res.data.data.user.repositories.edges)
                 this.state.data = res.data.data.user.repositories.edges
             }).catch(res => {
                 console.log(res)
